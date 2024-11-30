@@ -1,6 +1,7 @@
 package guru.springframework.spring5webfluxrest.controller;
 
 import guru.springframework.spring5webfluxrest.domain.Category;
+import guru.springframework.spring5webfluxrest.domain.Category;
 import guru.springframework.spring5webfluxrest.repository.CategoryRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,6 +80,24 @@ public class CategoryControllerTest {
                 .willReturn(Mono.just(categoryUpdated));
 
         webTestClient.put()
+                .uri(CategoryController.BASE_URL.concat("{id}"), "1")
+                .body(Mono.just(categoryOriginal), Category.class)
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    public void testPatch() {
+        Category categoryOriginal = Category.builder().id("1").description("Miscelaneous").build();
+        Category categoryUpdated = Category.builder().id("1").description("Electro").build();
+
+        BDDMockito.given(categoryRepository.findById("1"))
+                .willReturn(Mono.just(categoryOriginal));
+        BDDMockito.given(categoryRepository.save(categoryOriginal))
+                .willReturn(Mono.just(categoryUpdated));
+
+        webTestClient.patch()
                 .uri(CategoryController.BASE_URL.concat("{id}"), "1")
                 .body(Mono.just(categoryOriginal), Category.class)
                 .exchange()

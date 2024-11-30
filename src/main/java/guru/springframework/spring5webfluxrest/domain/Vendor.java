@@ -20,4 +20,9 @@ public class Vendor {
     private String name;
 
     private String lastName;
+
+    public boolean equals(Vendor other) {
+        return this.name.equals(other.name) && this.lastName.equals(other.lastName);
+    }
+
 }
